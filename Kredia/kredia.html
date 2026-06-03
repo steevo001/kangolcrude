@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kredia — OAU EdTech Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --bg2: #edeae2;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --text: #1a1812;
+    --muted: #7a7568;
+    --faint: #b0a99e;
+
+    --barter: #c8860a;
+    --barter-bg: #fff8ec;
+    --barter-border: rgba(200,134,10,0.2);
+    --barter-light: #fef3d8;
+
+    --brain: #1a6e4a;
+    --brain-bg: #edf7f2;
+    --brain-border: rgba(26,110,74,0.2);
+    --brain-light: #d4eee1;
+
+    --grid: #2a4fc8;
+    --grid-bg: #eef1fd;
+    --grid-border: rgba(42,79,200,0.2);
+    --grid-light: #d3daf8;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    background: rgba(245,242,236,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--text); letter-spacing: -0.03em;
+  }
+  .nav-logo em { font-style: italic; color: var(--barter); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.875rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--text); color: var(--bg);
+    padding: 0.55rem 1.35rem; border-radius: 999px;
+    font-size: 0.875rem; font-weight: 600; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-texture {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(ellipse 70% 60% at 50% -10%, rgba(200,134,10,0.1) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(42,79,200,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 10% 70%, rgba(26,110,74,0.07) 0%, transparent 55%);
+    background-color: var(--bg);
+  }
+  /* subtle grain */
+  .hero-texture::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--barter-bg); border: 1px solid var(--barter-border);
+    color: var(--barter); padding: 0.35rem 1rem; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+    margin-bottom: 2rem; z-index: 1; position: relative;
+    animation: slideUp 0.6s ease both;
+  }
+  .hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--barter); }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3.2rem, 8vw, 6.5rem);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    z-index: 1; position: relative;
+    animation: slideUp 0.6s 0.1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--barter); }
+  .hero h1 .line2 { color: var(--brain); }
+
+  .hero-sub {
+    max-width: 520px; color: var(--muted); font-size: 1.1rem; line-height: 1.75;
+    z-index: 1; position: relative;
+    animation: slideUp 0.6s 0.2s ease both;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; z-index: 1; position: relative;
+    animation: slideUp 0.6s 0.3s ease both;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .btn-dark {
+    background: var(--text); color: var(--bg);
+    padding: 0.85rem 2.2rem; border-radius: 999px;
+    font-weight: 600; font-size: 0.95rem; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-md);
+  }
+  .btn-dark:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .btn-outline {
+    border: 1.5px solid var(--border2); color: var(--text);
+    padding: 0.85rem 2.2rem; border-radius: 999px;
+    font-weight: 500; font-size: 0.95rem; text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--surface);
+  }
+  .btn-outline:hover { border-color: var(--text); background: var(--bg2); }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0; background: var(--surface);
+  }
+  .ticker { display: flex; gap: 4rem; animation: ticker 28s linear infinite; width: max-content; }
+  .ticker-item {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--faint); white-space: nowrap; display: flex; align-items: center; gap: 1rem;
+  }
+  .ticker-item::after { content: '✦'; font-size: 0.5rem; color: var(--barter); }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-eyebrow::before { content: ''; width: 20px; height: 1.5px; background: currentColor; }
+  h2.section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+    line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+  .section-desc { color: var(--muted); font-size: 1rem; max-width: 480px; line-height: 1.8; }
+
+  /* ── OVERVIEW CARDS ── */
+  .overview-section { background: var(--surface); padding: 6rem 2rem; }
+  .products-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 4rem;
+  }
+  .product-card {
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 2rem; background: var(--bg);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .product-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 20px 20px 0 0;
+  }
+  .card-barter::before { background: var(--barter); }
+  .card-brain::before { background: var(--brain); }
+  .card-grid::before { background: var(--grid); }
+  .card-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 1.5rem;
+  }
+  .card-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.25rem;
+  }
+  .card-barter .card-icon { background: var(--barter-light); }
+  .card-brain .card-icon { background: var(--brain-light); }
+  .card-grid .card-icon { background: var(--grid-light); }
+  .product-card h3 {
+    font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900;
+    margin-bottom: 0.5rem; letter-spacing: -0.02em;
+  }
+  .card-barter h3 { color: var(--barter); }
+  .card-brain h3 { color: var(--brain); }
+  .card-grid h3 { color: var(--grid); }
+  .product-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+  .card-status {
+    display: inline-block; margin-top: 1.25rem;
+    padding: 0.3rem 0.8rem; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .status-live { background: var(--brain-bg); color: var(--brain); border: 1px solid var(--brain-border); }
+  .status-soon { background: var(--grid-bg); color: var(--grid); border: 1px solid var(--grid-border); }
+
+  /* ── BARTER SECTION ── */
+  #barter { background: var(--barter-bg); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+  .wallet-card {
+    background: var(--surface); border: 1px solid var(--barter-border);
+    border-radius: 24px; padding: 2rem; box-shadow: var(--shadow-lg);
+    position: relative; overflow: hidden;
+  }
+  .wallet-card::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,134,10,0.08) 0%, transparent 70%);
+  }
+  .wallet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.75rem; }
+  .wallet-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-bottom: 0.4rem; }
+  .wallet-balance { font-family: 'Fraunces', serif; font-size: 2.8rem; font-weight: 900; color: var(--barter); line-height: 1; }
+  .wallet-balance span { font-size: 1rem; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+  .wallet-pending { font-size: 0.75rem; color: var(--brain); font-weight: 600; }
+  .tx-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .tx {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.75rem 1rem;
+  }
+  .tx-left { display: flex; align-items: center; gap: 0.75rem; }
+  .tx-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .tx-name { font-size: 0.83rem; font-weight: 600; color: var(--text); }
+  .tx-time { font-size: 0.72rem; color: var(--faint); }
+  .tx-amount { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 700; }
+  .pos { color: var(--brain); }
+  .neg { color: #c0392b; }
+
+  .feat-grid { margin-top: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .feat-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .feat-box-icon { font-size: 1.2rem; margin-bottom: 0.6rem; }
+  .feat-box h4 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+  .feat-box p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── ECONOMY BAND ── */
+  .economy-band {
+    background: var(--barter); padding: 3.5rem 2rem;
+  }
+  .economy-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .eco-item { text-align: center; }
+  .eco-item strong { display: block; font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 0.4rem; }
+  .eco-item p { font-size: 0.83rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  /* ── BRAIN SECTION ── */
+  #brain { background: var(--brain-bg); }
+
+  .chat-card {
+    background: var(--surface); border: 1px solid var(--brain-border);
+    border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg);
+  }
+  .chat-top {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: var(--brain-bg);
+  }
+  .chat-avatar {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--brain); display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #fff;
+  }
+  .chat-top-info h4 { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 900; color: var(--brain); }
+  .chat-top-info span { font-size: 0.72rem; color: var(--muted); }
+  .chat-mode { margin-left: auto; background: var(--brain); color: #fff; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
+  .chat-msgs { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .msg { max-width: 85%; padding: 0.85rem 1rem; border-radius: 14px; font-size: 0.83rem; line-height: 1.65; }
+  .msg.user { align-self: flex-end; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px 14px 4px 14px; }
+  .msg.ai { align-self: flex-start; background: var(--brain-light); border: 1px solid var(--brain-border); border-radius: 14px 14px 14px 4px; }
+  .msg .lbl { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.3rem; color: var(--faint); }
+  .msg.ai .lbl { color: var(--brain); }
+  .chat-input-row {
+    display: flex; gap: 0.5rem; align-items: center;
+    margin: 0 1.5rem 1.25rem; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.6rem 0.85rem;
+  }
+  .chat-input-row span { color: var(--faint); font-size: 0.82rem; flex: 1; }
+  .chat-send { background: var(--brain); color: #fff; border: none; border-radius: 8px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; }
+
+  .brain-feats { list-style: none; }
+  .brain-feats li { display: flex; gap: 1rem; align-items: flex-start; padding: 1.2rem 0; border-bottom: 1px solid var(--border); }
+  .brain-feats li:last-child { border-bottom: none; }
+  .bfeat-icon {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px;
+    background: var(--brain-light); border: 1px solid var(--brain-border);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .bfeat-text h4 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text); }
+  .bfeat-text p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── MODES ── */
+  .modes-section { background: var(--surface); padding: 0 2rem 5rem; }
+  .modes-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .mode-card { border-radius: 20px; padding: 2rem; border: 1px solid var(--border); }
+  .mode-card.study { background: var(--brain-bg); border-color: var(--brain-border); }
+  .mode-card.exam { background: #fff5f5; border-color: rgba(192,57,43,0.15); }
+  .mode-card h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 0.6rem; }
+  .mode-card.study h3 { color: var(--brain); }
+  .mode-card.exam h3 { color: #c0392b; }
+  .mode-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; margin-bottom: 1.25rem; }
+  .mode-card ul { list-style: none; }
+  .mode-card ul li { font-size: 0.83rem; color: var(--muted); padding: 0.3rem 0; display: flex; align-items: center; gap: 0.6rem; }
+  .mode-card.study ul li::before { content: '→'; color: var(--brain); font-size: 0.75rem; }
+  .mode-card.exam ul li::before { content: '→'; color: #c0392b; font-size: 0.75rem; }
+
+  /* ── SPACE GRID ── */
+  #grid { background: var(--grid-bg); }
+
+  .cs-banner {
+    background: var(--surface); border: 1px solid var(--grid-border); border-radius: 14px;
+    padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .cs-pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--grid); animation: blink 2s ease infinite; flex-shrink: 0; }
+  .cs-banner span { font-size: 0.85rem; font-weight: 600; color: var(--grid); }
+  .cs-banner small { font-size: 0.75rem; color: var(--faint); margin-left: auto; }
+
+  .map-mock {
+    background: var(--surface); border: 1px solid var(--grid-border);
+    border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+  .map-overlay {
+    position: absolute; inset: 0; background: rgba(238,241,253,0.75);
+    backdrop-filter: blur(3px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+    border-radius: 24px;
+  }
+  .map-overlay-text { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 900; letter-spacing: 0.08em; color: var(--grid); }
+  .map-overlay-sub { font-size: 0.78rem; color: var(--muted); }
+  .map-inner { padding: 1.5rem; min-height: 200px; position: relative; }
+  .map-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .map-hdr h4 { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 900; }
+  .map-legend { display: flex; gap: 1rem; }
+  .leg { display: flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; color: var(--muted); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .map-area {
+    background: var(--grid-bg); border: 1px solid var(--grid-border); border-radius: 14px;
+    min-height: 160px; position: relative;
+  }
+  .pin {
+    position: absolute; display: flex; align-items: center; gap: 0.3rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.25rem 0.65rem; font-size: 0.68rem; font-weight: 600;
+  }
+  .pin-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .venue-rows { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .venue-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.55rem 0.9rem; font-size: 0.8rem;
+  }
+  .crowd-bar { display: flex; gap: 2px; }
+  .cseg { width: 6px; height: 13px; border-radius: 2px; background: var(--border2); }
+  .cseg.on { background: var(--grid); }
+  .venue-tag { font-size: 0.7rem; color: var(--brain); font-weight: 600; }
+
+  .grid-feats { margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .gf {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.25rem; box-shadow: var(--shadow-sm);
+  }
+  .gf h4 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+  .gf p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  .gf-icon { font-size: 1.2rem; margin-bottom: 0.6rem; }
+
+  .waitlist-box {
+    max-width: 1100px; margin: 4rem auto 0;
+    background: var(--grid); border-radius: 24px;
+    padding: 3rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    box-shadow: var(--shadow-lg);
+  }
+  .waitlist-box h3 { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; }
+  .waitlist-box p { color: rgba(255,255,255,0.65); font-size: 0.9rem; max-width: 360px; }
+  .wl-form { display: flex; gap: 0.75rem; }
+  .wl-input {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 10px; padding: 0.8rem 1.25rem; color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; min-width: 230px;
+  }
+  .wl-input::placeholder { color: rgba(255,255,255,0.45); }
+  .wl-input:focus { border-color: rgba(255,255,255,0.5); }
+  .wl-btn {
+    background: #fff; color: var(--grid);
+    padding: 0.8rem 1.5rem; border-radius: 10px; border: none; cursor: pointer;
+    font-weight: 700; font-size: 0.9rem; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+    transition: opacity 0.2s;
+  }
+  .wl-btn:hover { opacity: 0.9; }
+
+  /* ── TECH STACK ── */
+  .stack-section { background: var(--surface); padding: 6rem 2rem; }
+  .stack-grid {
+    max-width: 1100px; margin: 3rem auto 0;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--border); border-radius: 20px; overflow: hidden;
+  }
+  .stack-cell { background: var(--bg); padding: 1.75rem; border-right: 1px solid var(--border); }
+  .stack-cell:last-child { border-right: none; }
+  .stack-cell h4 { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 1rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .tag {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 0.28rem 0.65rem; border-radius: 6px;
+    font-size: 0.75rem; font-weight: 500;
+  }
+
+  /* ── ROADMAP ── */
+  .roadmap-section { background: var(--bg2); padding: 6rem 2rem; }
+  .timeline { max-width: 1100px; margin: 3rem auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .phase {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem; position: relative; overflow: hidden;
+  }
+  .phase::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 20px 20px 0 0; }
+  .ph1::before { background: var(--grid); }
+  .ph2::before { background: var(--barter); }
+  .ph3::before { background: var(--brain); }
+  .phase-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; display: block; }
+  .ph1 .phase-badge { color: var(--grid); }
+  .ph2 .phase-badge { color: var(--barter); }
+  .ph3 .phase-badge { color: var(--brain); }
+  .phase h3 { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 900; margin-bottom: 0.25rem; color: var(--text); }
+  .phase .wks { font-size: 0.78rem; color: var(--faint); margin-bottom: 1.25rem; }
+  .phase-list { list-style: none; }
+  .phase-list li { font-size: 0.83rem; color: var(--muted); padding: 0.3rem 0; display: flex; align-items: baseline; gap: 0.5rem; border-bottom: 1px solid var(--border); }
+  .phase-list li:last-child { border-bottom: none; }
+  .phase-list li::before { content: '—'; font-size: 0.7rem; flex-shrink: 0; }
+  .ph1 .phase-list li::before { color: var(--grid); }
+  .ph2 .phase-list li::before { color: var(--barter); }
+  .ph3 .phase-list li::before { color: var(--brain); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--text); padding: 8rem 2rem; text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900;
+    line-height: 1.05; letter-spacing: -0.03em; color: var(--bg);
+    margin-bottom: 1.25rem;
+  }
+  .cta-section h2 em { font-style: italic; color: var(--barter); }
+  .cta-section p { color: rgba(245,242,236,0.55); font-size: 1.05rem; margin-bottom: 2.5rem; }
+  .btn-light {
+    background: var(--bg); color: var(--text);
+    padding: 0.9rem 2.5rem; border-radius: 999px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    display: inline-block; transition: opacity 0.2s;
+  }
+  .btn-light:hover { opacity: 0.85; }
+  .btn-ghost-light {
+    border: 1.5px solid rgba(245,242,236,0.25); color: var(--bg);
+    padding: 0.9rem 2.5rem; border-radius: 999px;
+    font-weight: 500; font-size: 1rem; text-decoration: none;
+    display: inline-block; margin-left: 1rem; transition: border-color 0.2s;
+  }
+  .btn-ghost-light:hover { border-color: rgba(245,242,236,0.5); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text); border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 900; color: var(--bg); }
+  .footer-logo em { font-style: italic; color: var(--barter); }
+  footer p { font-size: 0.8rem; color: rgba(245,242,236,0.35); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .revealed { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .two-col, .products-grid, .stack-grid, .timeline, .modes-grid, .feat-grid, .grid-feats, .economy-inner { grid-template-columns: 1fr; }
+    .stack-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .waitlist-box { flex-direction: column; }
+    .wl-form { flex-direction: column; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kred<em>ia</em></div>
+  <ul class="nav-links">
+    <li><a href="#barter">Skill Barter</a></li>
+    <li><a href="#brain">OAU Brain</a></li>
+    <li><a href="#grid">Space Grid</a></li>
+    <li><a href="#stack">Stack</a></li>
+  </ul>
+  <a href="#barter" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-texture"></div>
+  <div class="hero-eyebrow">Obafemi Awolowo University · 2026</div>
+  <h1>One platform.<br><em>Three modules.</em><br><span class="line2">Built for OAU.</span></h1>
+  <p class="hero-sub">A unified ecosystem transforming the student experience — from cashless skill trading to AI-powered exam prep and real-time campus navigation.</p>
+  <div class="hero-actions">
+    <a href="#barter" class="btn-dark">Explore Platform</a>
+    <a href="#stack" class="btn-outline">View Tech Stack</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Skill Barter</span>
+    <span class="ticker-item">Credit Economy</span>
+    <span class="ticker-item">OAU Brain</span>
+    <span class="ticker-item">RAG Pipeline</span>
+    <span class="ticker-item">Space Grid</span>
+    <span class="ticker-item">Live Campus Map</span>
+    <span class="ticker-item">React + Supabase</span>
+    <span class="ticker-item">Vector Search</span>
+    <span class="ticker-item">Skill Barter</span>
+    <span class="ticker-item">Credit Economy</span>
+    <span class="ticker-item">OAU Brain</span>
+    <span class="ticker-item">RAG Pipeline</span>
+    <span class="ticker-item">Space Grid</span>
+    <span class="ticker-item">Live Campus Map</span>
+    <span class="ticker-item">React + Supabase</span>
+    <span class="ticker-item">Vector Search</span>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section class="overview-section">
+  <div class="container reveal">
+    <div class="section-eyebrow" style="color:var(--muted);">Platform Overview</div>
+    <h2 class="section-title">Three modules.<br>One shared economy.</h2>
+    <p class="section-desc">Shared authentication, shared user profiles, and a credit economy that ties every product together into a single ecosystem.</p>
+  </div>
+  <div class="container reveal" style="margin-top:0;">
+    <div class="products-grid">
+      <div class="product-card card-barter">
+        <div class="card-num">01 · Live Now</div>
+        <div class="card-icon">🤝</div>
+        <h3>Skill Barter</h3>
+        <p>Cashless peer-to-peer skill exchange. Trade tutoring, design, coding, and writing — no cash needed, just credits.</p>
+        <span class="card-status status-live">Active</span>
+      </div>
+      <div class="product-card card-brain">
+        <div class="card-num">02 · Live Now</div>
+        <div class="card-icon">🧠</div>
+        <h3>OAU Brain</h3>
+        <p>AI tutor trained on OAU past questions and lecture materials. Understands how your specific lecturers set their exams.</p>
+        <span class="card-status status-live">Active</span>
+      </div>
+      <div class="product-card card-grid">
+        <div class="card-num">03 · Coming Soon</div>
+        <div class="card-icon">🗺️</div>
+        <h3>Space Grid</h3>
+        <p>Real-time crowdsourced campus study space map. See which rooms have power, how crowded they are, and join study pods.</p>
+        <span class="card-status status-soon">Coming Soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILL BARTER -->
+<section id="barter">
+  <div class="container">
+    <div class="two-col reveal">
+      <div>
+        <div class="section-eyebrow" style="color:var(--barter);">Module 01 · Skill Barter</div>
+        <h2 class="section-title">Trade skills.<br><em style="color:var(--barter);">Not cash.</em></h2>
+        <p class="section-desc">Students at OAU are highly skilled but often cash-constrained. Skill Barter replaces money with platform credits — so your knowledge has real value.</p>
+        <div class="feat-grid">
+          <div class="feat-box">
+            <div class="feat-box-icon">📋</div>
+            <h4>Skill Listings</h4>
+            <p>Post your skills publicly. Set your rate, availability, and subject. Students find and book you directly.</p>
+          </div>
+          <div class="feat-box">
+            <div class="feat-box-icon">🔒</div>
+            <h4>Escrow System</h4>
+            <p>Credits lock in escrow before every session. Released only on mutual confirmation — both parties protected.</p>
+          </div>
+          <div class="feat-box">
+            <div class="feat-box-icon">⭐</div>
+            <h4>Reputation</h4>
+            <p>5-star ratings and written reviews after every session. Your profile builds real credibility over time.</p>
+          </div>
+          <div class="feat-box">
+            <div class="feat-box-icon">🎨</div>
+            <h4>Any Skill</h4>
+            <p>Not just academics. Slide design, CV writing, photography, coding help — every OAU skill has value here.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="wallet-card">
+          <div class="wallet-header">
+            <div>
+              <div class="wallet-label">Credit Wallet</div>
+              <div class="wallet-balance">24 <span>credits</span></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;">= 12 hours of tutoring</div>
+              <div class="wallet-pending">+2 pending verification</div>
+            </div>
+          </div>
+          <div class="tx-list">
+            <div class="tx">
+              <div class="tx-left">
+                <div class="tx-dot" style="background:var(--brain);"></div>
+                <div><div class="tx-name">MTH 202 Tutoring — Earned</div><div class="tx-time">Today, 3:15 PM</div></div>
+              </div>
+              <div class="tx-amount pos">+4 cr</div>
+            </div>
+            <div class="tx">
+              <div class="tx-left">
+                <div class="tx-dot" style="background:#c0392b;"></div>
+                <div><div class="tx-name">CV Writing — Spent</div><div class="tx-time">Yesterday, 11:00 AM</div></div>
+              </div>
+              <div class="tx-amount neg">−2 cr</div>
+            </div>
+            <div class="tx">
+              <div class="tx-left">
+                <div class="tx-dot" style="background:var(--barter);"></div>
+                <div><div class="tx-name">Past question verified</div><div class="tx-time">Mon, 9:00 AM</div></div>
+              </div>
+              <div class="tx-amount pos">+2 cr</div>
+            </div>
+            <div class="tx">
+              <div class="tx-left">
+                <div class="tx-dot" style="background:var(--grid);"></div>
+                <div><div class="tx-name">Welcome bonus</div><div class="tx-time">Account signup</div></div>
+              </div>
+              <div class="tx-amount pos">+5 cr</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMY BAND -->
+<div class="economy-band">
+  <div class="economy-inner reveal">
+    <div class="eco-item"><strong>1 cr</strong><p>= 30 minutes of tutoring or equivalent service</p></div>
+    <div class="eco-item"><strong>5 cr</strong><p>Free credits on signup to bootstrap participation</p></div>
+    <div class="eco-item"><strong>2 cr</strong><p>Earned per verified OAU past question uploaded</p></div>
+    <div class="eco-item"><strong>0%</strong><p>Target dispute rate — escrow protects every session</p></div>
+  </div>
+</div>
+
+<!-- OAU BRAIN -->
+<section id="brain">
+  <div class="container">
+    <div class="two-col reveal" style="align-items:start;">
+      <div>
+        <div class="section-eyebrow" style="color:var(--brain);">Module 02 · OAU Brain</div>
+        <h2 class="section-title">Your AI tutor<br>knows <em style="color:var(--brain);">your exams.</em></h2>
+        <p class="section-desc">Generic AI tools are useless for Nigerian university exams. OAU Brain is trained on your department's past questions, lecture handouts, and senior students' annotated notes.</p>
+        <ul class="brain-feats" style="margin-top:2rem;">
+          <li>
+            <div class="bfeat-icon">📚</div>
+            <div class="bfeat-text"><h4>Course-Scoped Chat</h4><p>Select MTH 102, CHM 201, or any course. Every conversation is scoped to that course's OAU-specific knowledge base.</p></div>
+          </li>
+          <li>
+            <div class="bfeat-icon">🎯</div>
+            <div class="bfeat-text"><h4>Weak Point Detector</h4><p>Tracks which question types you get wrong. Auto-generates custom drill sessions targeting your exact gaps.</p></div>
+          </li>
+          <li>
+            <div class="bfeat-icon">📖</div>
+            <div class="bfeat-text"><h4>Community Question Bank</h4><p>Searchable past exam questions per course per year, community-contributed and admin-verified. Earn 2 credits per verified upload.</p></div>
+          </li>
+          <li>
+            <div class="bfeat-icon">⚡</div>
+            <div class="bfeat-text"><h4>RAG Architecture</h4><p>Retrieval Augmented Generation — not hallucination. Every answer is grounded in actual OAU material stored in pgvector.</p></div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="chat-card">
+          <div class="chat-top">
+            <div class="chat-avatar">🧠</div>
+            <div class="chat-top-info"><h4>OAU Brain</h4><span>MTH 102 · Calculus</span></div>
+            <div class="chat-mode">Study Mode</div>
+          </div>
+          <div class="chat-msgs">
+            <div class="msg user"><div class="lbl">You</div>In the 2023 MTH 102 exam, how does Prof. Adekunle phrase limit questions?</div>
+            <div class="msg ai"><div class="lbl">OAU Brain</div>Based on past questions from 2019–2023, Prof. Adekunle favours piecewise functions where you must verify continuity at the boundary point using left-limit, right-limit, and function value. Common structure: "Find the value of k such that f(x) is continuous at x = 2…"</div>
+            <div class="msg user"><div class="lbl">You</div>Show me an example drill question like that.</div>
+            <div class="msg ai"><div class="lbl">OAU Brain</div><strong>Drill Question (2022 style):</strong><br><br>Given f(x) = { 3x + k, x &lt; 2 ; x² − 1, x ≥ 2 }, find k such that f is continuous at x = 2. Show all working using the three-condition test. ⏱ 8 min suggested.</div>
+          </div>
+          <div class="chat-input-row">
+            <span>Ask OAU Brain anything about MTH 102…</span>
+            <button class="chat-send">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODES -->
+<div class="modes-section">
+  <div class="modes-grid container reveal">
+    <div class="mode-card study">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">💡</div>
+      <h3>Study Mode</h3>
+      <p>Deep understanding first. OAU Brain walks you through methodology, hints, and step-by-step breakdowns tailored to how your department expects you to think.</p>
+      <ul>
+        <li>Step-by-step hint system</li>
+        <li>Methodology explanations</li>
+        <li>LaTeX and Markdown rendering</li>
+        <li>Linked to community question bank</li>
+      </ul>
+    </div>
+    <div class="mode-card exam">
+      <div style="font-size:1.5rem;margin-bottom:0.75rem;">⏱️</div>
+      <h3>Exam Mode</h3>
+      <p>Simulate real exam conditions. Timed, no hints, graded instantly. Pulled from the exact same OAU-specific question bank so you know what to expect.</p>
+      <ul>
+        <li>Timed sessions with countdown</li>
+        <li>Zero hints — exam discipline</li>
+        <li>Instant AI grading and feedback</li>
+        <li>Score feeds into Weak Point Detector</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SPACE GRID -->
+<section id="grid">
+  <div class="container">
+    <div class="two-col reveal">
+      <div>
+        <div class="cs-banner">
+          <div class="cs-pulse"></div>
+          <span>Coming Soon — Phase 1</span>
+          <small>Launching Week 3</small>
+        </div>
+        <div class="section-eyebrow" style="color:var(--grid);">Module 03 · Space Grid</div>
+        <h2 class="section-title">Never waste time<br>hunting for a<br><em style="color:var(--grid);font-style:italic;">study spot again.</em></h2>
+        <p class="section-desc" style="margin-top:1rem;">Real-time crowdsourced map of every study venue on OAU campus. Power status, crowd levels, noise levels — updated every 90 minutes by fellow students.</p>
+        <div class="grid-feats">
+          <div class="gf"><div class="gf-icon">⚡</div><h4>Power Alerts</h4><p>3+ reports of no power triggers instant push notifications to everyone who favourited that venue.</p></div>
+          <div class="gf"><div class="gf-icon">👥</div><h4>Study Pods</h4><p>Broadcast: "Space at BOO-C, MTH 102, 3 slots." Others join with one tap. Expires in 2 hours.</p></div>
+          <div class="gf"><div class="gf-icon">📊</div><h4>Live Status</h4><p>Crowd level, noise level, power status — aggregated from non-expired check-ins via Supabase Realtime.</p></div>
+          <div class="gf"><div class="gf-icon">🔮</div><h4>Predictive (Phase 2)</h4><p>Historical check-ins train a time-series model to predict which venues will be free before you leave.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="map-mock">
+          <div class="map-overlay">
+            <div class="map-overlay-text">COMING SOON</div>
+            <div class="map-overlay-sub">Join the waitlist below for early access</div>
+          </div>
+          <div class="map-inner">
+            <div class="map-hdr">
+              <h4>🗺️ OAU Campus — Live</h4>
+              <div class="map-legend">
+                <div class="leg"><div class="leg-dot" style="background:var(--brain);"></div>Open</div>
+                <div class="leg"><div class="leg-dot" style="background:#c0392b;"></div>Full</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--faint);"></div>No power</div>
+              </div>
+            </div>
+            <div class="map-area">
+              <div class="pin" style="top:18%;left:18%;"><div class="pin-dot" style="background:var(--brain);"></div>BOO-C</div>
+              <div class="pin" style="top:52%;left:52%;"><div class="pin-dot" style="background:#c0392b;"></div>Library</div>
+              <div class="pin" style="top:32%;left:65%;"><div class="pin-dot" style="background:var(--brain);"></div>Sci Lab</div>
+              <div class="pin" style="top:68%;left:28%;"><div class="pin-dot" style="background:var(--faint);"></div>Eng Hall</div>
+            </div>
+            <div class="venue-rows">
+              <div class="venue-row"><span>Bookshop Overflow C</span><div style="display:flex;align-items:center;gap:0.75rem;"><div class="crowd-bar"><div class="cseg on"></div><div class="cseg on"></div><div class="cseg"></div><div class="cseg"></div><div class="cseg"></div></div><span class="venue-tag">⚡ Power</span></div></div>
+              <div class="venue-row"><span>Main Library</span><div style="display:flex;align-items:center;gap:0.75rem;"><div class="crowd-bar"><div class="cseg on"></div><div class="cseg on"></div><div class="cseg on"></div><div class="cseg on"></div><div class="cseg on"></div></div><span style="font-size:0.7rem;color:#c0392b;font-weight:600;">Full</span></div></div>
+              <div class="venue-row"><span>Science Complex</span><div style="display:flex;align-items:center;gap:0.75rem;"><div class="crowd-bar"><div class="cseg on"></div><div class="cseg"></div><div class="cseg"></div><div class="cseg"></div><div class="cseg"></div></div><span class="venue-tag">⚡ Power</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="waitlist-box reveal">
+      <div>
+        <h3>Be first on Space Grid.</h3>
+        <p>Space Grid ships in Week 3 and gives every OAU student instant daily value. Drop your email to get early access.</p>
+      </div>
+      <div class="wl-form">
+        <input class="wl-input" type="email" placeholder="your.email@oauife.edu.ng">
+        <button class="wl-btn" id="wl-btn">Join Waitlist</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="stack-section" id="stack">
+  <div class="container reveal">
+    <div class="section-eyebrow" style="color:var(--muted);">Engineering</div>
+    <h2 class="section-title">Built fast.<br>Built right.</h2>
+    <p class="section-desc">One React + Supabase core, plus a single Python FastAPI microservice for the AI pipeline. The team's existing skills, amplified.</p>
+  </div>
+  <div class="stack-grid reveal">
+    <div class="stack-cell">
+      <h4>Frontend</h4>
+      <div class="tags">
+        <span class="tag">React 18</span><span class="tag">Vite</span><span class="tag">Tailwind CSS</span>
+        <span class="tag">Zustand</span><span class="tag">React Query</span><span class="tag">Leaflet.js</span><span class="tag">KaTeX</span>
+      </div>
+    </div>
+    <div class="stack-cell">
+      <h4>Backend & Auth</h4>
+      <div class="tags">
+        <span class="tag">Supabase</span><span class="tag">PostgreSQL</span><span class="tag">Supabase Auth</span>
+        <span class="tag">Realtime</span><span class="tag">Edge Functions</span><span class="tag">Row-Level Security</span>
+      </div>
+    </div>
+    <div class="stack-cell">
+      <h4>AI Pipeline</h4>
+      <div class="tags">
+        <span class="tag">Python FastAPI</span><span class="tag">LangChain</span><span class="tag">pgvector</span>
+        <span class="tag">Claude API</span><span class="tag">GPT-4o</span><span class="tag">text-embedding-3-small</span>
+        <span class="tag">PyMuPDF</span><span class="tag">Tesseract</span>
+      </div>
+    </div>
+    <div class="stack-cell">
+      <h4>Infra & Tools</h4>
+      <div class="tags">
+        <span class="tag">Vercel</span><span class="tag">Railway</span><span class="tag">Expo (Phase 2)</span>
+        <span class="tag">Linear</span><span class="tag">Notion</span><span class="tag">GitHub Actions</span><span class="tag">Figma</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap-section">
+  <div class="container reveal">
+    <div class="section-eyebrow" style="color:var(--muted);">Build Roadmap</div>
+    <h2 class="section-title">12 weeks.<br>Three launches.</h2>
+    <p class="section-desc">Each phase builds on shared infrastructure from the previous. Space Grid earns trust — Skill Barter and OAU Brain follow.</p>
+  </div>
+  <div class="timeline container reveal">
+    <div class="phase ph1">
+      <span class="phase-badge">Phase 1 · Foundation</span>
+      <h3>Space Grid</h3>
+      <div class="wks">Weeks 1 – 3</div>
+      <ul class="phase-list">
+        <li>Supabase setup, auth, DB schema</li>
+        <li>Shared React layout shell</li>
+        <li>Interactive campus map component</li>
+        <li>Venue check-in API + 90-min expiry</li>
+        <li>Supabase Realtime subscriptions</li>
+        <li>Study pod broadcast + push notifications</li>
+        <li>20-person beta launch</li>
+      </ul>
+    </div>
+    <div class="phase ph2">
+      <span class="phase-badge">Phase 2 · Economy</span>
+      <h3>Skill Barter</h3>
+      <div class="wks">Weeks 4 – 7</div>
+      <ul class="phase-list">
+        <li>Credit ledger schema + escrow logic</li>
+        <li>Skill listing creation + browse</li>
+        <li>Full session lifecycle management</li>
+        <li>Booking flow + wallet dashboard</li>
+        <li>Rating + review system</li>
+        <li>Dispute resolution + admin tools</li>
+        <li>100+ user public beta</li>
+      </ul>
+    </div>
+    <div class="phase ph3">
+      <span class="phase-badge">Phase 3 · Intelligence</span>
+      <h3>OAU Brain</h3>
+      <div class="wks">Weeks 8 – 12</div>
+      <ul class="phase-list">
+        <li>RAG pipeline: ingest, chunk, embed</li>
+        <li>Course selector + chat interface</li>
+        <li>LaTeX renderer + Exam Mode</li>
+        <li>Past question bank UI</li>
+        <li>Weak point detector (rule-based v1)</li>
+        <li>Drill session + progress dashboard</li>
+        <li>Full platform public launch</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>The OAU student<br>experience, <em>rebuilt.</em></h2>
+    <p>One platform. Credits that flow between every module. Built by OAU students, for OAU students.</p>
+    <a href="#barter" class="btn-light">Start with Skill Barter</a>
+    <a href="#brain" class="btn-ghost-light">Try OAU Brain</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kred<em>ia</em></div>
+  <p>Obafemi Awolowo University · Ile-Ife · 2026</p>
+  <p style="font-size:0.78rem;color:rgba(245,242,236,0.2);">3 modules · 5 engineers · 12 weeks</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Waitlist
+  document.getElementById('wl-btn').addEventListener('click', function() {
+    const input = document.querySelector('.wl-input');
+    if (input.value) {
+      this.textContent = '✓ You\'re on the list!';
+      this.style.background = '#d4eee1';
+      this.style.color = 'var(--brain)';
+      input.value = ''; input.disabled = true;
+    }
+  });
+</script>
+</body>
+</html>
